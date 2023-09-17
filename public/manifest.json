@@ -6,7 +6,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.royalroad.com/*/*"],
-      "js": ["content_script.js"]
+      "js": ["js/content_script.js"]
     }
   ]
 }

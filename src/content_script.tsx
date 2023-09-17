@@ -10,6 +10,6 @@ pElements.forEach((element, index) => {
     imgElement.src = "https://i.imgur.com/DuU4ODQ.png";
 
     // Insert the image after the 4th <p> element
-    element.parentNode.insertBefore(imgElement, element.nextSibling);
+    element!.parentNode!.insertBefore(imgElement, element.nextSibling);
   }
 });
