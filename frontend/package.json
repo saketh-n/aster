@@ -7,7 +7,7 @@
     "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
-    "style": "prettier --write \"src/**/*.{ts,tsx}\""
+    "style": "prettier --write \\\"src/**/*.{ts,tsx}\\\""
   },
   "author": "",
   "license": "MIT",
@@ -16,8 +16,6 @@
     "url": ""
   },
   "dependencies": {
-    "openai": "^4.7.1",
-    "p-queue": "6.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
