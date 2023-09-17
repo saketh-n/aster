@@ -5,15 +5,16 @@ const generateImage = async () => {
 
   pElements.forEach((p, index) => {
     if (index / 3 === 0) {
-      fetch(`http://localhost:3000/api/imagen?text=${p.textContent}`).then(res => res.json())
+      fetch(`http://localhost:3000/api/imagen?text=${p.textContent}`)
+        .then(res => res.json())
         .then(data => {
           // Create an image element
           const imgElement = document.createElement('img')
           imgElement.src = data.url
+          imgElement.alt = 'Loadig image...'
 
           p!.parentNode!.insertBefore(imgElement, p!.nextSibling)
         })
-
     }
   })
 }
