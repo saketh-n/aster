@@ -3,20 +3,25 @@ console.log('Extension loaded')
 const generateImage = async () => {
   const pElements = document.querySelectorAll('p')
 
-  pElements.forEach((p, index) => {
-    if (index / 3 === 0) {
-      fetch(`http://localhost:3000/api/imagen?text=${p.textContent}`)
-        .then(res => res.json())
-        .then(data => {
-          // Create an image element
-          const imgElement = document.createElement('img')
-          imgElement.src = data.url
-          imgElement.alt = 'Loading image...'
+  console.log('Fetching images in parallel')
+  await Promise.all(
+    Array.from(pElements).map(async (p, index) => {
+      console.log(index, p.textContent)
+      if (((index + 1) % 3) === 0) {
+        console.log(`Fetching image for ${index} + 1th element`)
 
-          p!.parentNode!.insertBefore(imgElement, p!.nextSibling)
-        })
-    }
-  })
+        await fetch(`http://localhost:3000/api/imagen?text=${p.textContent}`)
+          .then(res => res.json())
+          .then(data => {
+            // Create an image element
+            const imgElement = document.createElement('img')
+            imgElement.src = data.url
+            imgElement.alt = 'Loading image...'
+
+            p!.parentNode!.insertBefore(imgElement, p!.nextSibling)
+          })
+      }
+    }))
 }
 
-generateImage()
+generateImage().catch(e => console.error('Error from content script'))
