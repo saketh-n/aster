@@ -1,20 +1,28 @@
 console.log('Extension loaded')
 
-fetch('http://localhost:3000/api/images').then(res => res.json()).then(data => {
-  console.log('Data from server', data)
+const h1 = document.getElementsByTagName('h1')[0]
 
-  const pElements = document.querySelectorAll('p')
+fetch(`http://localhost:3000/api/images2?text=${h1?.textContent}`).then(res => res.json()).then(async headerData => {
+    console.log('Header data from server', headerData)
 
-// Loop through the <p> elements and insert image after every 4th one
-  pElements.forEach((element, index) => {
-    if ((index + 1) % 4 === 0) {
-      // Create an image element
-      const imgElement = document.createElement('img')
-      imgElement.src = data.url
+    const headerImage = document.createElement('img')
+    headerImage.src = headerData.url
+    h1!.parentNode!.insertBefore(headerImage, h1.nextSibling)
 
-      // Insert the image after the 4th <p> element
-      element!.parentNode!.insertBefore(imgElement, element.nextSibling)
+    const pElements = document.querySelectorAll('p')
+
+    for (const [index, p] of pElements.entries()) {
+      if ((index + 1) % 4 === 0) {
+        await fetch(`http://localhost:3000/api/images2?text=${p.textContent}`).then(res => res.json())
+          .then(data => {
+            // Create an image element
+            const imgElement = document.createElement('img')
+            imgElement.src = data.url
+
+            p!.parentNode!.insertBefore(imgElement, p.nextSibling)
+          })
+
+      }
     }
-  })
-
-})
+  }
+)
