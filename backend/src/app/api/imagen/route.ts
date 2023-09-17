@@ -6,14 +6,12 @@ const promptPrompt = 'Generate a concise and visually rich prompt for the follow
 
 export async function GET(req: NextRequest) {
   const text = req.nextUrl.searchParams.get('text')!
+  console.time(text)
   console.log(`Received request: ${text}`)
   const openai = new OpenAI(process.env.OPENAI_API_KEY!)
   const prompt = await openai.chatCompletion('You are an expert prompt engineer with vast experience creating prompts for generate AI models', `${promptPrompt}\n${text}`, 'gpt-3.5-turbo')
 
-  const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN!
-  })
-
+  const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN! })
 
   console.log('Prompt from GPT', prompt)
 
@@ -23,5 +21,6 @@ export async function GET(req: NextRequest) {
   )
   console.log(`Image URL from Replicate: ${output}`)
 
+  console.timeEnd(text)
   return NextResponse.json({ url: output })
 }
