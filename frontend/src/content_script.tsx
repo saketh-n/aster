@@ -15,15 +15,14 @@ const generateImages = async (theme: string) => {
         charCount = 0
         console.log(`Fetching image for chunk ending at ${index + 1}th element`)
 
+        const imgElement = document.createElement('img')
+        imgElement.src = 'https://i.imgur.com/D6HmCoT.png'
+        p.parentNode?.insertBefore(imgElement, p.nextSibling)
+
         await fetch(`http://localhost:3000/api/imagen?text=${p.textContent}&theme=${theme}`)
           .then(res => res.json())
           .then(data => {
-            // Create an image element
-            const imgElement = document.createElement('img')
             imgElement.src = data.url
-
-            // Insert the image after the current <p> element
-            p.parentNode?.insertBefore(imgElement, p.nextSibling)
           })
       }
     })
