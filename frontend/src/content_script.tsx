@@ -11,7 +11,7 @@ const generateImage = async () => {
           // Create an image element
           const imgElement = document.createElement('img')
           imgElement.src = data.url
-          imgElement.alt = 'Loadig image...'
+          imgElement.alt = 'Loading image...'
 
           p!.parentNode!.insertBefore(imgElement, p!.nextSibling)
         })
