@@ -1,6 +1,6 @@
 console.log('Extension loaded')
 
-const generateImage = async () => {
+const generateImages = async (theme: string) => {
   const pElements = document.querySelectorAll('p')
   let charCount = 0
 
@@ -8,7 +8,6 @@ const generateImage = async () => {
 
   await Promise.all(
     Array.from(pElements).map(async (p, index) => {
-      console.log(index, p.textContent)
       charCount += p.textContent?.length ?? 0
 
       if (charCount >= 2500) {
@@ -16,7 +15,7 @@ const generateImage = async () => {
         charCount = 0
         console.log(`Fetching image for chunk ending at ${index + 1}th element`)
 
-        await fetch(`http://localhost:3000/api/imagen?text=${p.textContent}`)
+        await fetch(`http://localhost:3000/api/imagen?text=${p.textContent}&theme=${theme}`)
           .then(res => res.json())
           .then(data => {
             // Create an image element
@@ -31,4 +30,18 @@ const generateImage = async () => {
   )
 }
 
-generateImage().catch(e => console.error('Error from content script'))
+const classifyStory = () => {
+  const text = Array.from(document.querySelectorAll('p')).slice(0, 5).map(_ => _.textContent?.trim()!).filter(Boolean).join('\n')
+
+  return fetch(`http://localhost:3000/api/classify?text=${text}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log(`Classified story as ${data.theme}`)
+      return data.theme as string
+    }).catch(e => {
+      console.error('Error classifying text', e)
+      return 'drama'
+    })
+}
+
+classifyStory().then(theme => generateImages(theme).catch(e => console.error('Error from content script', e)))
